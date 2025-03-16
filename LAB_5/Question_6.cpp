@@ -3,19 +3,19 @@ using namespace std;
 
 class GraphicsEngine {
 public:
-    GraphicsEngine() { cout << "Graphics Engine initialized.\n"; }
+    GraphicsEngine() { cout << "Graphics Engine made.\n"; }
     ~GraphicsEngine() { cout << "Graphics Engine destroyed.\n"; }
 };
 
 class InputHandler {
 public:
-    InputHandler() { cout << "Input Handler initialized.\n"; }
+    InputHandler() { cout << "Input Handler made.\n"; }
     ~InputHandler() { cout << "Input Handler destroyed.\n"; }
 };
 
 class PhysicsEngine {
 public:
-    PhysicsEngine() { cout << "Physics Engine initialized.\n"; }
+    PhysicsEngine() { cout << "Physics Engine made.\n"; }
     ~PhysicsEngine() { cout << "Physics Engine destroyed.\n"; }
 };
 
@@ -26,7 +26,7 @@ private:
     PhysicsEngine physics;
 
 public:
-    GameEngine() { cout << "Game Engine initialized.\n"; }
+    GameEngine() { cout << "Game Engine made"; }
     ~GameEngine() { cout << "Game Engine destroyed.\n"; }
 };
 
