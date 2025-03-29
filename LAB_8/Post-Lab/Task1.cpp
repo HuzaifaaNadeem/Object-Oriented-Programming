@@ -28,35 +28,19 @@ public:
 
     void deposit(double amount) {
         balance += amount;
-        cout << "Cash deposit of $" << amount << " successful! Your new balance is: $" << balance << endl;
+        cout << "Cash deposit of Rs." << amount << " successful! Your new balance is: Rs." << balance << endl;
     }
-    void deposit(double amount, string checkNumber) {
+    void depositByCheck(double amount, string checkNumber) {
         balance += amount;
-        cout << "Check deposit of $" << amount << " (Check No: " << checkNumber << ") successful! Your new balance is: $" << balance << endl;
+        cout << "Check deposit of Rs." << amount << " (Check No: " << checkNumber << ") successful! Your new balance is: Rs." << balance << endl;
     }
-    void deposit(double amount, bool onlineTransfer) {
+    void depositOnline(double amount) {
         balance += amount;
-        cout << "Online transfer of $" << amount << " successful! Your new balance is: $" << balance << endl;
+        cout << "Online transfer of Rs." << amount << " successful! Your new balance is: Rs." << balance << endl;
     }
 
     virtual void withdraw(double amount) = 0;
-
-    BankAccount operator+(const BankAccount &other) {
-        return BankAccount("Merged", this->balance + other.balance);
-    }
-    BankAccount operator-(double amount) {
-        return BankAccount(this->accountNumber, this->balance - amount);
-    }
-    BankAccount operator*(double interest) {
-        return BankAccount(this->accountNumber, this->balance * (1 + interest));
-    }
-    BankAccount operator/(int installments) {
-        return BankAccount(this->accountNumber, this->balance / installments);
-    }
-
-    void display() {
-        cout << "Account Number: " << accountNumber << " | Balance: $" << balance << endl;
-    }
+    virtual void display() = 0;
 };
 
 class SavingsAccount : public BankAccount {
@@ -65,15 +49,32 @@ public:
 
     void calculateInterest() override {
         setBalance(getBalance() * 1.05);
-        cout << "Annual interest applied! New balance: $" << getBalance() << endl;
+        cout << "Annual interest applied! New balance: Rs." << getBalance() << endl;
     }
     void withdraw(double amount) override {
         if (getBalance() - amount < 500) {
-            cout << "Oops! You need to maintain at least $500 in your savings account." << endl;
+            cout << "Oops! You need to maintain at least Rs.500 in your savings account." << endl;
         } else {
             setBalance(getBalance() - amount);
-            cout << "Withdrawal of $" << amount << " successful! Remaining balance: $" << getBalance() << endl;
+            cout << "Withdrawal of Rs." << amount << " successful! Remaining balance: Rs." << getBalance() << endl;
         }
+    }
+    
+    void display() override {
+        cout << "Savings Account - Account Number: " << getAccountNumber() << " | Balance: Rs." << getBalance() << endl;
+    }
+
+    SavingsAccount operator+(const SavingsAccount &other) {
+        return SavingsAccount("Merged", this->getBalance() + other.getBalance());
+    }
+    SavingsAccount operator-(double amount) {
+        return SavingsAccount(this->getAccountNumber(), this->getBalance() - amount);
+    }
+    SavingsAccount operator*(double interest) {
+        return SavingsAccount(this->getAccountNumber(), this->getBalance() * (1 + interest));
+    }
+    SavingsAccount operator/(int installments) {
+        return SavingsAccount(this->getAccountNumber(), this->getBalance() / installments);
     }
 };
 
@@ -84,11 +85,15 @@ public:
     void calculateInterest() override {}
     void withdraw(double amount) override {
         if (getBalance() - amount < -1000) {
-            cout << "Sorry! Overdraft limit of $1000 exceeded. Transaction declined." << endl;
+            cout << "Sorry! Overdraft limit of Rs.1000 exceeded. Transaction declined." << endl;
         } else {
             setBalance(getBalance() - amount);
-            cout << "Withdrawal of $" << amount << " successful! Remaining balance: $" << getBalance() << endl;
+            cout << "Withdrawal of Rs." << amount << " successful! Remaining balance: Rs." << getBalance() << endl;
         }
+    }
+    
+    void display() override {
+        cout << "Current Account - Account Number: " << getAccountNumber() << " | Balance: Rs." << getBalance() << endl;
     }
 };
 
@@ -97,8 +102,8 @@ int main() {
     CurrentAccount currentAccount("C456", 500);
 
     savingsAccount.deposit(200);
-    savingsAccount.deposit(300, "CHK123");
-    savingsAccount.deposit(500, true);
+    savingsAccount.depositByCheck(300, "BAHBL0948338");
+    savingsAccount.depositOnline(500);
     
     savingsAccount.withdraw(400);
     savingsAccount.withdraw(800);
@@ -108,16 +113,16 @@ int main() {
     currentAccount.withdraw(500);
 
     SavingsAccount savingsAccount2("S789", 2000);
-    BankAccount mergedAccount = savingsAccount + savingsAccount2;
+    SavingsAccount mergedAccount = savingsAccount + savingsAccount2;
     mergedAccount.display();
 
-    BankAccount deductedAccount = savingsAccount - 200;
+    SavingsAccount deductedAccount = savingsAccount - 200;
     deductedAccount.display();
 
-    BankAccount interestApplied = savingsAccount * 0.05;
+    SavingsAccount interestApplied = savingsAccount * 0.05;
     interestApplied.display();
 
-    BankAccount installmentPayment = savingsAccount / 5;
+    SavingsAccount installmentPayment = savingsAccount / 5;
     installmentPayment.display();
 
     return 0;
