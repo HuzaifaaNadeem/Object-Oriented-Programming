@@ -2,94 +2,187 @@
 #include <string>
 using namespace std;
 
-class Vehicle {
+class Ghost {
 protected:
-    string name;
-    int speed;
-    int capacity;
-    static int total_deliveries;
+    string ghostName;
+    int scareLevel;
 
 public:
-    Vehicle(string n, int s, int c) : name(n), speed(s), capacity(c) { total_deliveries++; }
-    virtual void deliver(int package_id, string urgency, string destination) {
-        cout << name << " is delivering package " << package_id << " with " << urgency << " urgency to " << destination << "...\n";
-    }
-    virtual void calculate_route() {
-        cout << name << " is calculating the optimal route...\n";
-    }
-    virtual void estimate_delivery_time() {
-        cout << name << " is estimating delivery time...\n";
-    }
-    bool operator==(const Vehicle &v) {
-        return (speed == v.speed && capacity == v.capacity);
-    }
-    friend void resolve_conflict(Vehicle &v1, Vehicle &v2);
-};
+    Ghost(string name, int level) : ghostName(name), scareLevel(level) {}
+    Ghost() : ghostName("Unnamed Ghost"), scareLevel(1) {}
 
-int Vehicle::total_deliveries = 0;
+    virtual void haunt() = 0;
+    
+    int getScareLevel() const {
+        return scareLevel;
+    }
 
-class RamzanTimeShip : public Vehicle {
-public:
-    RamzanTimeShip() : Vehicle("Ramzan TimeShip", 300, 500) {}
-    void deliver(int package_id, string urgency, string destination) override {
-        cout << name << " is validating historical accuracy before delivering package " << package_id << " to " << destination << " with " << urgency << " urgency!\n";
+    string getGhostName() const {
+        return ghostName;
+    }
+
+    friend ostream& operator<<(ostream& os, const Ghost& ghost) {
+        os << "Ghost Name: " << ghost.ghostName << ", Scare Level: " << ghost.scareLevel;
+        return os;
+    }
+
+    Ghost operator+(const Ghost& other) {
+        return Ghost("Combined Ghost", this->scareLevel + other.scareLevel);
     }
 };
 
-class RamzanDrone : public Vehicle {
+class Poltergeist : public Ghost {
 public:
-    RamzanDrone() : Vehicle("Ramzan Drone", 150, 50) {}
-    void deliver(int package_id, string urgency, string destination) override {
-        cout << name << " is activating high-speed mode to ensure package " << package_id << " reaches " << destination << " in time for " << urgency << "!\n";
+    Poltergeist(string name, int level) : Ghost(name, level) {}
+
+    void haunt() override {
+        cout << "Moving objects around!" << endl;
     }
 };
 
-class RamzanHyperPod : public Vehicle {
+class Banshee : public Ghost {
 public:
-    RamzanHyperPod() : Vehicle("Ramzan HyperPod", 200, 1000) {}
-    void deliver(int package_id, string urgency, string destination) override {
-        cout << name << " is navigating underground tunnels to deliver package " << package_id << " to " << destination << " with " << urgency << " urgency efficiently!\n";
+    Banshee(string name, int level) : Ghost(name, level) {}
+
+    void haunt() override {
+        cout << "Screaming loudly!" << endl;
     }
 };
 
-void resolve_conflict(Vehicle &v1, Vehicle &v2) {
-    cout << "Conflict detected between " << v1.name << " and " << v2.name << "! Determining the best delivery option...\n";
-    if (v1.speed > v2.speed)
-        cout << v1.name << " is assigned higher priority due to faster speed.\n";
-    else
-        cout << v2.name << " is assigned higher priority due to better efficiency.\n";
-}
+class ShadowGhost : public Ghost {
+public:
+    ShadowGhost(string name, int level) : Ghost(name, level) {}
 
-void command(string action, int package_id) {
-    cout << "Operator command received: " << action << " package " << package_id << "\n";
-}
-void command(string action, int package_id, string urgency) {
-    cout << "Operator command received: " << action << " package " << package_id << " with " << urgency << " urgency\n";
+    void haunt() override {
+        cout << "Whispering creepily..." << endl;
+    }
+};
+
+class ShadowPoltergeist : public ShadowGhost, public Poltergeist {
+public:
+    ShadowPoltergeist(string name, int level) : Ghost(name, level), ShadowGhost(name, level), Poltergeist(name, level) {}
+
+    void haunt() override {
+        cout << "Moving objects while whispering creepily..." << endl;
+    }
+};
+
+class Visitor {
+private:
+    string visitorName;
+    string braveryLevel;
+
+public:
+    Visitor(string name, int bravery) : visitorName(name) {
+        if (bravery >= 1 && bravery <= 4) braveryLevel = "Cowardly";
+        else if (bravery >= 5 && bravery <= 7) braveryLevel = "Average";
+        else if (bravery >= 8 && bravery <= 10) braveryLevel = "Fearless";
+        else braveryLevel = "Unknown";
+    }
+
+    string getName() const {
+        return visitorName;
+    }
+
+    string getBraveryLevel() const {
+        return braveryLevel;
+    }
+
+    string reactToGhost(int ghostScareLevel) {
+        int lower, upper;
+
+        if (braveryLevel == "Cowardly") {
+            lower = 1;
+            upper = 4;
+        } else if (braveryLevel == "Average") {
+            lower = 5;
+            upper = 7;
+        } else if (braveryLevel == "Fearless") {
+            lower = 8;
+            upper = 10;
+        } else {
+            return "Unknown bravery level!";
+        }
+
+        if (ghostScareLevel > upper) {
+            return "Screams and runs away!";
+        } else if (ghostScareLevel < lower) {
+            return "Laughs and taunts the ghost!";
+        } else {
+            return "Shaky voice, trying to be brave...";
+        }
+    }
+};
+
+class HauntedHouse {
+private:
+    string houseName;
+    Ghost** ghosts;
+    int numGhosts;
+
+public:
+    HauntedHouse(string name, int numGhosts) : houseName(name), numGhosts(numGhosts) {
+        ghosts = new Ghost*[numGhosts];
+    }
+
+    ~HauntedHouse() {
+        for (int i = 0; i < numGhosts; i++) {
+            delete ghosts[i];
+        }
+        delete[] ghosts;
+    }
+
+    string getHouseName() const {
+        return houseName;
+    }
+
+    void addGhost(Ghost* ghost, int index) {
+        if (index < numGhosts) {
+            ghosts[index] = ghost;
+        }
+    }
+
+    Ghost* getGhost(int index) {
+        if (index < numGhosts) {
+            return ghosts[index];
+        }
+        return nullptr;
+    }
+};
+
+void visitHauntedHouse(HauntedHouse &house, Visitor visitors[], int visitorCount) {
+    cout << "Visitors are entering the haunted house: " << house.getHouseName() << endl;
+    for (int i = 0; i < visitorCount; i++) {
+        cout << "\nVisitor: " << visitors[i].getName() << " (Bravery: " << visitors[i].getBraveryLevel() << ")\n";
+
+        for (int j = 0; j < house.numGhosts; j++) {
+            Ghost* currentGhost = house.getGhost(j);
+            cout << "Encountering Ghost: " << currentGhost->getGhostName() << " (Scare Level: " << currentGhost->getScareLevel() << ")" << endl;
+            currentGhost->haunt();
+            cout << visitors[i].reactToGhost(currentGhost->getScareLevel()) << endl;
+        }
+    }
 }
 
 int main() {
-    cout << "Huzaifa Nadeem"<<endl;
-	cout << "24K-0533"<<endl;
-	cout << "BCS-2F"<<endl<<endl;
-    
-    RamzanTimeShip timeShip;
-    RamzanDrone drone;
-    RamzanHyperPod hyperPod;
-    
-    cout << "Ramzan Box Delivery System initializing...\n\n";
-    
-    command("Deliver", 101);
-    command("Deliver", 102, "Sehri");
-    
-    timeShip.deliver(101, "Normal", "Karachi");
-    drone.deliver(102, "Iftar", "Lahore");
-    hyperPod.deliver(103, "Sehri", "Islamabad");
-    
-    cout << "\nResolving delivery conflicts...\n";
-    resolve_conflict(drone, hyperPod);
-    resolve_conflict(timeShip, drone);
-    
-    cout << "\nAll deliveries scheduled successfully. Have a blessed Ramzan!\n";
-    
+    Ghost* ghost1 = new Poltergeist("Poltergeist1", 6);
+    Ghost* ghost2 = new Banshee("Banshee1", 7);
+    Ghost* ghost3 = new ShadowGhost("ShadowGhost1", 5);
+    Ghost* ghost4 = new ShadowPoltergeist("ShadowPoltergeist1", 8);
+
+    HauntedHouse house1("Haunted Mansion", 4);
+    house1.addGhost(ghost1, 0);
+    house1.addGhost(ghost2, 1);
+    house1.addGhost(ghost3, 2);
+    house1.addGhost(ghost4, 3);
+
+    Visitor visitors[] = {
+        Visitor("Alice", 3),
+        Visitor("Bob", 6),
+        Visitor("Charlie", 9)
+    };
+
+    visitHauntedHouse(house1, visitors, 3);
+
     return 0;
 }
