@@ -105,6 +105,10 @@ bool resolve_conflict(Vehicle &v1, Vehicle &v2) {
 }
 
 int main() {
+    cout << "Huzaifa Nadeem"<<endl;
+    cout << "24K-0533"<<endl;
+    cout << "BCS-2F"<<endl<<endl;
+    
     RamzanDrone drone("DRONE-1001", 108, 165, 220);
     RamzanTimeShip ship("TIMESHIP-005", 215, 530, 2550);
     RamzanHyperPod pod("HYPERPOD-XV", 120, 190, 255);
