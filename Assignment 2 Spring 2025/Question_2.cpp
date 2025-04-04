@@ -165,6 +165,9 @@ void visitHauntedHouse(HauntedHouse &house, Visitor visitors[], int visitorCount
 }
 
 int main() {
+    cout << "Huzaifa Nadeem"<<endl;
+	cout << "24K-0533"<<endl;
+	cout << "BCS-2F"<<endl<<endl;
     Ghost* ghost1 = new Poltergeist("Poltergeist1", 6);
     Ghost* ghost2 = new Banshee("Banshee1", 7);
     Ghost* ghost3 = new ShadowGhost("ShadowGhost1", 5);
