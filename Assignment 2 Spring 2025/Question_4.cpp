@@ -144,6 +144,10 @@ void authenticateAndPerformAction(User* user, string action) {
 }
 
 int main() {
+    cout << "Huzaifa Nadeem"<<endl;
+    cout << "24K-0533"<<endl;
+    cout << "BCS-2F"<<endl<<endl;
+    
     Student student("Huzaifa Nadeem", 533, "huzaifa@nu.com", "pass123");
     TA ta("Ali", 102, "Ali@nu.com", "ta_pass");
     Professor professor("Dr. Abrar", 909, "Abrar@nu.com", "prof_pass");
