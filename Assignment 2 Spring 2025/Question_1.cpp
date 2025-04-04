@@ -139,7 +139,10 @@ public:
 };
 
 int main() {
-    TransportSystem system;
+    cout << "Huzaifa Nadeem"<<endl;
+	cout << "24K-0533"<<endl;
+	cout << "BCS-2F"<<endl<<endl;
+	TransportSystem system;
     system.register_user(new Student(1, "Huzaifa"));
     system.register_user(new Teacher(2, "Prof. Ali"));
     system.register_user(new StaffMember(3, "Mr. Ahmed"));
